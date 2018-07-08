@@ -1,5 +1,7 @@
 class Config(object):
-    pass
+    @staticmethod
+    def init_app(app):
+        pass
 
 
 class ProConfig(Config):
@@ -11,4 +13,8 @@ class ProConfig(Config):
 class DevConfig(Config):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = "mysql+pymysql://root:root@localhost:3306/test1"
+    SECRET_KEY = 'hard to guess'
+
+
+
 
