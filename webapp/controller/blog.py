@@ -1,6 +1,6 @@
 from webapp.models import Post,tags,Tag
 from webapp import db
-from sqlalchemy import func
+
 from os import path
 from flask import Blueprint
 
