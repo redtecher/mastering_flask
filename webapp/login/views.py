@@ -1,3 +1,4 @@
+#coding:utf-8
 from .forms import LoginForm,RegisterForm
 from . import login
 from flask import redirect,render_template,flash

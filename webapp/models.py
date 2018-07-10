@@ -1,5 +1,7 @@
-from webapp import db
-from webapp.extensions import bcrypt
+#coding:utf-8
+from webapp.extensions import bcrypt,db,loginmanager
+from flask_login import UserMixin
+
 
 tags = db.Table('post_tags',
     db.Column('post_id',db.Integer,db.ForeignKey('post.id')),
@@ -7,8 +9,15 @@ tags = db.Table('post_tags',
     )
 
 
-class User(db.Model):
+@loginmanager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+class User(UserMixin,db.Model):
+    
     id =db.Column(db.Integer(),primary_key = True)
+    email = db.Column(db.String(64),unique = True,index = True)
     username = db.Column(db.String(255))
     password = db.Column(db.String(255))
     posts = db.relationship('Post',backref = 'user',lazy = 'dynamic')
@@ -17,6 +26,9 @@ class User(db.Model):
     
     def __repr__(self):
         return "<User '{}'>".format(self.username)
+
+
+
 
     def set_password (self,password):
         self.password = bcrypt.generate_password_hash(password)
