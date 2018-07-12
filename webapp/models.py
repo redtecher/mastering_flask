@@ -1,6 +1,8 @@
 #coding:utf-8
 from webapp.extensions import bcrypt,db,loginmanager
 from flask_login import UserMixin
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+from flask import current_app
 
 
 tags = db.Table('post_tags',
@@ -35,6 +37,12 @@ class User(UserMixin,db.Model):
     
     def check_password(self,password):
         return bcrypt.check_password_hash(self.password,password)
+
+    
+
+
+
+
 
 class Post(db.Model):
     id = db.Column(db.Integer(),primary_key=True)

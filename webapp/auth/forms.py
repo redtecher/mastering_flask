@@ -2,8 +2,9 @@
 
 from flask_wtf import Form,RecaptchaField
 from wtforms import StringField,TextAreaField,PasswordField,BooleanField,SubmitField,BooleanField
-from wtforms.validators import DataRequired,Length,EqualTo,URL,Required,Email
-from ..models import User
+from wtforms.validators import DataRequired,Length,EqualTo,URL,Required,Email,Regexp
+from wtforms import ValidationError
+from ..models import User,db
 
 class LoginForm(Form):
     email = StringField('Email',validators=[Required(),Length(1,64),Email()])
@@ -14,11 +15,25 @@ class LoginForm(Form):
 
 
 class RegisterForm(Form):
-    username =StringField('Username',validators=[DataRequired(),Length(max=255)])
-    password = PasswordField('Password',validators=[DataRequired(),Length(min=8)])
-    confirm = PasswordField('Confirm Password',[DataRequired(),EqualTo('password')])
-    recaptcha =  RecaptchaField()
-'''
+    username =StringField('Username',validators=[DataRequired(),Length(max=255),Regexp('^[A-Za-z][A-Za-z0-9_.]*$',0,'usernames must be only letters,numbers,dots or underscores')])
+    email = StringField('Email',validators=[Email(),Required(),Length(1,64)])
+    password = PasswordField('Password',validators=[DataRequired(),Length(min=8),EqualTo('password2',message='Passwords must match')])
+    password2  =PasswordField('Comfirm Password',validators=[Required()])
+    
+    #recaptcha =  RecaptchaField()
+    submit = SubmitField('Register')
+
+    def validate_email(self,field):
+        if User.query.filter_by(email = field.data).first():
+            raise ValidationError('Email already registered')
+    
+    def validate_username(self,field):
+        if User.query.filter_by(username = field.data).first():
+            raise ValidationError('Username already registered')
+
+    
+
+    '''
     def validate(self):
         check_validate=super(RegisterForm,self).validate()
         if not check_validate:
@@ -33,4 +48,4 @@ class RegisterForm(Form):
             return False
 
         return True
-        '''
+    ''' 

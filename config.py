@@ -1,4 +1,14 @@
+import os
+
 class Config(object):
+    MAIL_SERVER = 'smtp.qq.com'
+    MAIL_PORT= 587
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = '121674005@qq.com' #os.environ.get('MAIL_USERNAME')
+    MAIL_PASSWORD = 'ewbvioovcwspcaaa' #os.environ.get('MAIL_PASSWORD')
+    FLASKY_MAIL_SUBJECT_PREFIX = '[Flasky]'
+    FLASKY_MAIL_SENDER = '121674005@qq.com'
+
     @staticmethod
     def init_app(app):
         pass
